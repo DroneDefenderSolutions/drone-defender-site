@@ -96,8 +96,14 @@ ${formData.message}
 
         const mailtoLink = `mailto:${mailto}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-        // Trigger mail client
-        window.location.href = mailtoLink;
+        // Trigger mail client via window.open to avoid navigating the current page
+        // and to be more robust across different browser security policies.
+        const mailWindow = window.open(mailtoLink, '_blank');
+
+        // If window.open was blocked or failed, fallback to location.href
+        if (!mailWindow || mailWindow.closed || typeof mailWindow.closed === 'undefined') {
+            window.location.href = mailtoLink;
+        }
 
         // Show success state
         setFormSubmitted(true);
@@ -338,9 +344,9 @@ ${formData.message}
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                     </svg>
                                 </div>
-                                <h3 className="text-2xl font-bold text-primary-navy mb-2">Enquiry Routed</h3>
+                                <h3 className="text-2xl font-bold text-primary-navy mb-2">Enquiry Successfully Handed Over</h3>
                                 <p className="text-text-muted mb-8 text-center max-w-md mx-auto">
-                                    Your enquiry has been formatted and routed to our inbox. Please ensure you sent the generated email in your mail client. We will respond within 48 hours.
+                                    Your enquiry has been formatted and passed to your chosen email provider. <strong>Please ensure you have pressed 'Send' in your mail client</strong> and check your outbox if needed. We will respond within 48 hours.
                                 </p>
                                 <button
                                     onClick={closeOverlay}
