@@ -23,6 +23,13 @@ body {
 }
 
 /* Global scroll behavior */
+html,
+body {
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -63,4 +70,39 @@ html {
 
 .animate-shake {
   animation: shake 0.2s ease-in-out 0s 2;
+}
+
+@media (max-width: 767px) {
+
+  html,
+  body {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    line-height: 1.7;
+    /* Slightly increased for mobile readability */
+  }
+
+  /* Prevent headings from wrapping awkwardly and cap line length */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    letter-spacing: normal !important;
+    /* Reduce wide tracking on mobile */
+  }
+
+  /* Standard tap target for buttons */
+  button,
+  a {
+    min-height: 44px;
+  }
 }

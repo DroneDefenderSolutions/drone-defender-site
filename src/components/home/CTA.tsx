@@ -5,7 +5,7 @@ import ContactTrigger from '../ContactTrigger';
 
 export default function CTA() {
     return (
-        <section className="py-32 bg-[#081C34] text-center border-t border-white/5">
+        <section className="py-20 lg:py-32 bg-[#081C34] text-center border-t border-white/5">
             <div className="max-w-[1000px] mx-auto px-6">
                 <h2 className="text-2xl font-bold text-white mb-8 tracking-wide">
                     Speak with the Lead Advisor

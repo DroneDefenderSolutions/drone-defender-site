@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
 
@@ -19,11 +21,15 @@ export default function SplitSection({
     children
 }: SplitSectionProps) {
     return (
-        <section className="w-full bg-white border-b border-line-grey/30">
+        <section className="w-full bg-white border-b border-line-grey/30 overflow-hidden">
             <div className="flex flex-col lg:flex-row h-full">
                 {/* Image Column */}
-                <div className={`relative min-h-[400px] lg:min-h-[600px] w-full lg:w-[55%] ${imagePosition === 'right' ? 'lg:order-2' : 'lg:order-1'
-                    }`}>
+                <div className={`
+                    relative w-full lg:w-[55%] 
+                    ${imagePosition === 'right' ? 'lg:order-2' : 'lg:order-1'}
+                    /* Mobile: Aspect ratio to prevent cropping and layout shifts */
+                    aspect-[4/3] sm:aspect-video lg:aspect-auto lg:min-h-[600px]
+                `}>
                     <Image
                         src={imageSrc}
                         alt={imageAlt}
@@ -40,7 +46,7 @@ export default function SplitSection({
                 <div className={`
           flex flex-col justify-center 
           w-full lg:w-[45%] 
-          p-8 lg:p-16 xl:p-24 
+          px-6 py-16 sm:p-12 md:p-16 lg:p-16 xl:p-24 
           lg:min-h-[600px]
           ${imagePosition === 'right' ? 'lg:order-1 bg-soft-steel/20' : 'lg:order-2 bg-white'}
         `}>

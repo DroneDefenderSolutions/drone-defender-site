@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 const capabilities = [
     {
@@ -26,23 +27,34 @@ const capabilities = [
 ];
 
 export default function CoreCapabilities() {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
     return (
-        <section className="bg-[#FAFBFD] py-24 px-6 border-b border-slate-200">
+        <section className="bg-[#FAFBFD] py-16 lg:py-24 px-6 border-b border-slate-200">
             <div className="max-w-[1400px] mx-auto">
-                <div className="mb-16 text-center">
+                <div className="mb-12 lg:mb-16 text-center">
                     <h3 className="text-3xl lg:text-4xl font-bold text-[#0D2C51] tracking-tight">Core Capabilities</h3>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 group/container"> {/* Group container for dimming siblings */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 group/container">
                     {capabilities.map((cap, _index) => (
                         <motion.div
                             key={cap.title}
-                            className="bg-white p-8 min-h-[280px] flex flex-col justify-start relative cursor-default border-t-[3px] border-[#0D2C51] shadow-sm group/panel z-10 hover:z-20 group-hover/container:opacity-50 hover:!opacity-100"
-                            initial={{ opacity: 0, y: 10 }}
+                            className={`bg-white p-8 min-h-[220px] lg:min-h-[280px] flex flex-col justify-start relative cursor-default border-t-[3px] border-[#0D2C51] shadow-sm z-10 transition-all duration-500
+                                ${isMobile ? '' : 'lg:hover:z-20 group-hover/container:opacity-50 lg:hover:!opacity-100'}
+                            `}
+                            initial={isMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.5, delay: _index * 0.1 }}
-                            whileHover="hover"
+                            whileHover={isMobile ? "" : "hover"}
                             animate="rest"
                         >
                             {/* Background color animation layer */}
@@ -55,7 +67,7 @@ export default function CoreCapabilities() {
                                         transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
                                     }
                                 }}
-                                className="absolute inset-0 z-0 border-t-[3px] border-[#0D2C51]"
+                                className={`absolute inset-0 z-0 border-t-[3px] border-[#0D2C51] ${isMobile ? 'hidden' : 'block'}`}
                             />
 
                             {/* Animated Top Rule */}
@@ -69,33 +81,36 @@ export default function CoreCapabilities() {
                                         transition: { duration: 0.5, ease: "easeOut" }
                                     }
                                 }}
+                                animate={isMobile ? { opacity: 1, scaleX: 1 } : undefined}
                             />
 
                             {/* Content Layer */}
-                            <div className="relative z-10 flex flex-col h-full pointer-events-none"> {/* pointer-events-none ensures hover sticks to parent */}
+                            <div className="relative z-10 flex flex-col h-full lg:pointer-events-none">
                                 <motion.h4
                                     className="text-xl font-bold mb-6"
                                     variants={{
                                         rest: { color: '#0D2C51' },
                                         hover: { color: '#ffffff', transition: { duration: 0.3 } }
                                     }}
+                                    animate={isMobile ? { color: '#0D2C51' } : undefined}
                                 >
                                     {cap.title}
                                 </motion.h4>
                                 <motion.p
                                     className="leading-relaxed text-sm mb-6 font-medium"
                                     variants={{
-                                        rest: { color: '#475569' }, // slate-600
+                                        rest: { color: '#475569' },
                                         hover: { color: 'rgba(255,255,255,0.9)', transition: { duration: 0.3 } }
                                     }}
+                                    animate={isMobile ? { color: '#475569' } : undefined}
                                 >
                                     {cap.desc}
                                 </motion.p>
 
-                                {/* Detail line - Fixed Layout with Smooth Reveal */}
+                                {/* Detail line - Visible by default on Mobile */}
                                 <div className="mt-auto overflow-hidden">
                                     <motion.p
-                                        className="text-sm text-sky-200 font-light tracking-wide border-t border-white/20 pt-4"
+                                        className={`text-sm font-light tracking-wide border-t pt-4 ${isMobile ? 'text-sky-600 border-[#0D2C51]/10 opacity-100 translate-y-0' : 'text-sky-200 border-white/20'}`}
                                         variants={{
                                             rest: { opacity: 0, y: 12 },
                                             hover: {
@@ -104,6 +119,7 @@ export default function CoreCapabilities() {
                                                 transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.1 }
                                             }
                                         }}
+                                        animate={isMobile ? { opacity: 1, y: 0 } : undefined}
                                     >
                                         {cap.detail}
                                     </motion.p>
@@ -114,10 +130,10 @@ export default function CoreCapabilities() {
                 </div>
 
                 {/* Narrative Reinforcement */}
-                <div className="mt-16 text-center">
-                    <p className="text-lg font-black tracking-[0.2em] text-[#0D2C51] uppercase leading-[2.6]">
-                        Each engagement follows this proven structure.<br />
-                        No phases omitted.<br />
+                <div className="mt-12 lg:mt-16 text-center">
+                    <p className="text-base lg:text-lg font-black tracking-[0.2em] text-[#0D2C51] uppercase leading-relaxed lg:leading-[2.6]">
+                        Each engagement follows this proven structure.<br className="hidden lg:block" />
+                        No phases omitted.<br className="hidden lg:block" />
                         No shortcuts taken.
                     </p>
                 </div>

@@ -4,9 +4,9 @@ import DoctrinePillars from './DoctrinePillars';
 
 export default function ThreatLandscape() {
     return (
-        <section className="py-32 bg-white relative">
+        <section className="py-20 lg:py-32 bg-white relative">
             <div className="max-w-[1400px] mx-auto px-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-stretch">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-stretch">
 
                     {/* Left: Narrative */}
                     <div className="flex flex-col justify-center">
@@ -24,8 +24,8 @@ export default function ThreatLandscape() {
                                 "Operational disruption potential",
                                 "Legal and compliance pressures"
                             ].map((item) => (
-                                <li key={item} className="flex items-center text-[#0D2C51] font-bold text-2xl">
-                                    <span className="w-2.5 h-2.5 bg-[#0D2C51] rounded-full mr-5" />
+                                <li key={item} className="flex items-center text-[#0D2C51] font-bold text-xl sm:text-2xl">
+                                    <span className="w-2.5 h-2.5 bg-[#0D2C51] rounded-full mr-5 shrink-0" />
                                     {item}
                                 </li>
                             ))}

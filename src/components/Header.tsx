@@ -9,7 +9,19 @@ import AnimatedNavLink from './AnimatedNavLink';
 export default function Header() {
     const [scrolled, setScrolled] = useState(false);
     const [isContactOpen, setIsContactOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [formSubmitted, setFormSubmitted] = useState(false);
+    const [formData, setFormData] = useState({
+        name: '',
+        org: '',
+        email: '',
+        phone: '',
+        nature: '',
+        subject: '',
+        message: '',
+        urgent: false
+    });
+
     const pathname = usePathname();
 
     useEffect(() => {
@@ -49,8 +61,45 @@ export default function Header() {
         setTimeout(() => setFormSubmitted(false), 300);
     };
 
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, value, type } = e.target;
+        if (type === 'checkbox') {
+            const { checked } = e.target as HTMLInputElement;
+            setFormData(prev => ({ ...prev, [name]: checked }));
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        const mailto = "mark@dronedefender.solutions";
+        const subject = `Site Enquiry: ${formData.subject}${formData.urgent ? ' [URGENT]' : ''}`;
+
+        const body = `
+--- DRONE DEFENDER ENQUIRY ---
+        
+Name: ${formData.name}
+Organisation: ${formData.org || 'Not provided'}
+Email: ${formData.email}
+Phone: ${formData.phone || 'Not provided'}
+Nature: ${formData.nature}
+Subject: ${formData.subject}
+Urgent: ${formData.urgent ? 'YES' : 'NO'}
+
+--- MESSAGE ---
+${formData.message}
+        
+------------------------------
+        `.trim();
+
+        const mailtoLink = `mailto:${mailto}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+        // Trigger mail client
+        window.location.href = mailtoLink;
+
+        // Show success state
         setFormSubmitted(true);
     };
 
@@ -62,27 +111,24 @@ export default function Header() {
                 style={{ height: '90px' }}
             >
                 <div className="max-w-[1400px] mx-auto px-6 h-full flex items-center justify-between">
-                    {/* Logo - Increased size by another ~50% from previous 270px width to roughly 400px base scale visually if needed, but constraint is bounds. 
-              User asked for 50% increase *relative to current*.
-              Previous was 270w. Let's bump to 320w render size in CSS or equivalent.
-          */}
                     <Link
                         href="/"
-                        className="flex items-center z-10 pl-2"
+                        className="flex items-center z-10 pl-2 shrink-0"
                         scroll={true}
-                        onClick={() => window.scrollTo({ top: 0, behavior: 'instant' })}
+                        onClick={() => {
+                            window.scrollTo({ top: 0, behavior: 'instant' });
+                            setIsMenuOpen(false);
+                        }}
                     >
                         <Image
                             src="/logos/drone-defender-white.png"
                             alt="Drone Defender"
                             width={350}
                             height={105}
-                            className="h-[80px] w-auto"
+                            className="h-[50px] sm:h-[65px] lg:h-[80px] w-auto transition-all"
                             priority
                         />
                     </Link>
-
-
 
                     {/* Center Navigation */}
                     <nav className="hidden lg:flex items-center gap-16 absolute left-1/2 transform -translate-x-1/2 h-full">
@@ -95,8 +141,8 @@ export default function Header() {
                         ))}
                     </nav>
 
-                    {/* Enquire Button */}
-                    <div className="flex items-center gap-4 z-10">
+                    {/* Enquire Button - Desktop only */}
+                    <div className="hidden lg:flex items-center gap-4 z-10">
                         <button
                             onClick={handleEnquireClick}
                             className="
@@ -118,15 +164,47 @@ export default function Header() {
                     </div>
 
                     {/* Mobile Menu Button */}
-                    <button className="lg:hidden text-white p-2">
-                        <div className="space-y-1.5">
-                            <span className="block w-6 h-0.5 bg-white"></span>
-                            <span className="block w-6 h-0.5 bg-white"></span>
-                            <span className="block w-6 h-0.5 bg-white"></span>
+                    <button
+                        className="lg:hidden text-white p-2 z-50 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        aria-label="Toggle Menu"
+                    >
+                        <div className="space-y-1.5 w-6">
+                            <span className={`block w-6 h-0.5 bg-white transition-transform duration-300 ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+                            <span className={`block w-6 h-0.5 bg-white transition-opacity duration-300 ${isMenuOpen ? 'opacity-0' : ''}`}></span>
+                            <span className={`block w-6 h-0.5 bg-white transition-transform duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
                         </div>
                     </button>
                 </div>
             </header>
+
+            {/* Mobile Menu Overlay */}
+            <div
+                className={`fixed inset-0 bg-[#050910] z-40 transition-all duration-500 lg:hidden ${isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+                    }`}
+            >
+                <div className="flex flex-col items-center justify-center h-full gap-12 text-center p-6">
+                    {navItems.map((item) => (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            className="text-white text-3xl font-bold uppercase tracking-[0.2em] transform transition-all active:scale-95"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            {item.name}
+                        </Link>
+                    ))}
+                    <button
+                        onClick={(e) => {
+                            handleEnquireClick(e);
+                            setIsMenuOpen(false);
+                        }}
+                        className="px-12 py-4 bg-white text-primary-navy text-xl font-bold uppercase tracking-wider rounded-sm transition-all active:scale-95"
+                    >
+                        Enquire
+                    </button>
+                </div>
+            </div>
 
             {/* FULL PAGE CONTACT OVERLAY */}
             {isContactOpen && (
@@ -150,30 +228,61 @@ export default function Header() {
                                 <h2 className="text-3xl font-bold text-primary-navy mb-2">Direct Enquiry</h2>
                                 <p className="text-text-muted mb-8">All enquiries are reviewed directly by the Principal Consultant.</p>
                                 <form onSubmit={handleSubmit} className="space-y-6">
-                                    {/* ... same form fields ... */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
                                             <label className="block text-sm font-medium text-primary-navy mb-2">Full Name</label>
-                                            <input type="text" required className="w-full p-3 bg-soft-steel/30 border border-line-grey rounded focus:border-primary-navy focus:outline-none transition-colors" />
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                value={formData.name}
+                                                onChange={handleChange}
+                                                required
+                                                className="w-full p-3 bg-soft-steel/30 border border-line-grey rounded focus:border-primary-navy focus:outline-none transition-colors"
+                                            />
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-primary-navy mb-2">Organisation (Optional)</label>
-                                            <input type="text" className="w-full p-3 bg-soft-steel/30 border border-line-grey rounded focus:border-primary-navy focus:outline-none transition-colors" />
+                                            <input
+                                                type="text"
+                                                name="org"
+                                                value={formData.org}
+                                                onChange={handleChange}
+                                                className="w-full p-3 bg-soft-steel/30 border border-line-grey rounded focus:border-primary-navy focus:outline-none transition-colors"
+                                            />
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
                                             <label className="block text-sm font-medium text-primary-navy mb-2">Work Email</label>
-                                            <input type="email" required className="w-full p-3 bg-soft-steel/30 border border-line-grey rounded focus:border-primary-navy focus:outline-none transition-colors" />
+                                            <input
+                                                type="email"
+                                                name="email"
+                                                value={formData.email}
+                                                onChange={handleChange}
+                                                required
+                                                className="w-full p-3 bg-soft-steel/30 border border-line-grey rounded focus:border-primary-navy focus:outline-none transition-colors"
+                                            />
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-primary-navy mb-2">Phone (Optional)</label>
-                                            <input type="tel" className="w-full p-3 bg-soft-steel/30 border border-line-grey rounded focus:border-primary-navy focus:outline-none transition-colors" />
+                                            <input
+                                                type="tel"
+                                                name="phone"
+                                                value={formData.phone}
+                                                onChange={handleChange}
+                                                className="w-full p-3 bg-soft-steel/30 border border-line-grey rounded focus:border-primary-navy focus:outline-none transition-colors"
+                                            />
                                         </div>
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-primary-navy mb-2">Nature of Enquiry</label>
-                                        <select required className="w-full p-3 bg-soft-steel/30 border border-line-grey rounded focus:border-primary-navy focus:outline-none transition-colors">
+                                        <select
+                                            required
+                                            name="nature"
+                                            value={formData.nature}
+                                            onChange={handleChange}
+                                            className="w-full p-3 bg-soft-steel/30 border border-line-grey rounded focus:border-primary-navy focus:outline-none transition-colors"
+                                        >
                                             <option value="">Select Nature of Enquiry...</option>
                                             <option>Consultancy</option>
                                             <option>Training</option>
@@ -185,14 +294,35 @@ export default function Header() {
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-primary-navy mb-2">Subject</label>
-                                        <input type="text" required className="w-full p-3 bg-soft-steel/30 border border-line-grey rounded focus:border-primary-navy focus:outline-none transition-colors" />
+                                        <input
+                                            type="text"
+                                            name="subject"
+                                            value={formData.subject}
+                                            onChange={handleChange}
+                                            required
+                                            className="w-full p-3 bg-soft-steel/30 border border-line-grey rounded focus:border-primary-navy focus:outline-none transition-colors"
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-primary-navy mb-2">Message</label>
-                                        <textarea required rows={4} className="w-full p-3 bg-soft-steel/30 border border-line-grey rounded focus:border-primary-navy focus:outline-none transition-colors resize-none"></textarea>
+                                        <textarea
+                                            required
+                                            name="message"
+                                            value={formData.message}
+                                            onChange={handleChange}
+                                            rows={4}
+                                            className="w-full p-3 bg-soft-steel/30 border border-line-grey rounded focus:border-primary-navy focus:outline-none transition-colors resize-none"
+                                        ></textarea>
                                     </div>
                                     <div className="flex items-center gap-3">
-                                        <input type="checkbox" id="urgent" className="w-4 h-4 text-primary-navy border-line-grey rounded focus:ring-primary-navy" />
+                                        <input
+                                            type="checkbox"
+                                            id="urgent"
+                                            name="urgent"
+                                            checked={formData.urgent}
+                                            onChange={handleChange}
+                                            className="w-4 h-4 text-primary-navy border-line-grey rounded focus:ring-primary-navy"
+                                        />
                                         <label htmlFor="urgent" className="text-sm text-text-muted">This matter is time sensitive</label>
                                     </div>
                                     <div className="flex items-center justify-between pt-4">
@@ -202,16 +332,15 @@ export default function Header() {
                                 </form>
                             </>
                         ) : (
-                            // Success state same as before
                             <div className="text-center py-16">
                                 <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                     </svg>
                                 </div>
-                                <h3 className="text-2xl font-bold text-primary-navy mb-2">Thank You</h3>
+                                <h3 className="text-2xl font-bold text-primary-navy mb-2">Enquiry Routed</h3>
                                 <p className="text-text-muted mb-8 text-center max-w-md mx-auto">
-                                    Thank you for your submission. A member of our team will be in touch in 48 hours. We look forward to working with you.
+                                    Your enquiry has been formatted and routed to our inbox. Please ensure you sent the generated email in your mail client. We will respond within 48 hours.
                                 </p>
                                 <button
                                     onClick={closeOverlay}

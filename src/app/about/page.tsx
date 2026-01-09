@@ -10,30 +10,39 @@ export default function AboutPage() {
 
             <main>
                 {/* A1: HERO - Institutionally Restrained */}
-                <section className="relative h-[calc(100vh-90px)] min-h-[550px] w-full overflow-hidden bg-[#050910] flex items-center">
+                <section className="
+                    relative w-full overflow-hidden bg-[#050910] flex items-center
+                    /* Mobile: Dynamic Viewport Height */
+                    min-h-[calc(100svh-90px)] max-h-[800px]
+                    /* Tablet */
+                    md:min-h-[500px] md:max-h-[700px]
+                    /* Desktop */
+                    lg:h-[calc(100vh-90px)] lg:min-h-[550px] lg:max-h-none
+                ">
                     {/* Background - Pure Dark Gradient, No Imagery */}
                     <div className="absolute inset-0 z-0">
                         <div className="absolute inset-0 bg-gradient-to-r from-[#050910] via-[#0B1221] to-[#050910]" />
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#050910_100%)] opacity-50" />
                     </div>
 
-                    <div className="relative z-20 w-full max-w-[1400px] mx-auto px-6">
-                        <div className="max-w-4xl -mt-20">
-                            <h1 className="text-white text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.95] mb-6 uppercase">
+                    <div className="relative z-20 w-full max-w-[1400px] mx-auto px-6 py-12 sm:py-20 lg:py-0">
+                        <div className="max-w-4xl lg:-mt-20">
+                            <h1 className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.95] mb-6 uppercase text-balance">
                                 About <br />
                                 Drone Defender
                             </h1>
-                            <p className="text-slate-300 text-lg md:text-xl font-light leading-relaxed max-w-2xl mb-8 border-l-2 border-[#3B82F6] pl-6">
+                            <p className="text-slate-300 text-base sm:text-lg md:text-xl font-light leading-relaxed max-w-2xl mb-8 border-l-2 border-[#3B82F6] pl-6 text-balance">
                                 Founded to bring real world operational discipline, evidence, and governance to counter UAS advisory work.
                             </p>
 
                             <ContactTrigger
                                 className="
-                                    group relative overflow-hidden
+                                    group relative overflow-hidden inline-block
                                     px-8 py-4 bg-white text-[#050910] 
                                     text-base font-bold tracking-wider uppercase
                                     transition-all duration-300
                                     hover:bg-red-600 hover:text-white
+                                    min-h-[44px] flex items-center justify-center
                                 "
                             >
                                 Start Consultation
@@ -43,7 +52,7 @@ export default function AboutPage() {
                 </section>
 
                 {/* A2: POSITIONING & LEADERSHIP */}
-                <section className="py-24 md:py-32 bg-white">
+                <section className="py-16 lg:py-24 md:py-32 bg-white">
                     <div className="max-w-[1400px] mx-auto px-6">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-stretch">
 
@@ -85,7 +94,7 @@ export default function AboutPage() {
                 </section>
 
                 {/* A3: PRINCIPLES */}
-                <section className="py-24 bg-[#050910] text-white border-y border-white/10">
+                <section className="py-16 lg:py-24 bg-[#050910] text-white border-y border-white/10">
                     <div className="max-w-[1400px] mx-auto px-6">
                         <div className="mb-16">
                             <SectionLabel text="ETHOS" color="text-blue-500" />
@@ -121,7 +130,7 @@ export default function AboutPage() {
                 </section>
 
                 {/* A4: OPERATING APPROACH */}
-                <section className="py-32 bg-[#F8FAFC]">
+                <section className="py-20 lg:py-32 bg-[#F8FAFC]">
                     <div className="max-w-[1400px] mx-auto px-6">
                         <div className="max-w-[800px] mb-20">
                             <SectionLabel text="METHOD" />
@@ -170,7 +179,7 @@ export default function AboutPage() {
                 </section>
 
                 {/* A5: CTA - Standardised */}
-                <section className="py-32 bg-[#050910] text-center border-t border-white/5">
+                <section className="py-20 lg:py-32 bg-[#050910] text-center border-t border-white/5">
                     <div className="max-w-2xl mx-auto px-6">
                         <h2 className="text-white text-4xl font-bold mb-8 tracking-tight">
                             Partner with Proven Experience

@@ -13,30 +13,39 @@ export default function SectorsPage() {
 
             <main>
                 {/* S1: HERO - Institutionally Restrained */}
-                <section className="relative h-[calc(100vh-90px)] min-h-[550px] w-full overflow-hidden bg-[#050910] flex items-center">
+                <section className="
+                    relative w-full overflow-hidden bg-[#050910] flex items-center
+                    /* Mobile: Dynamic Viewport Height */
+                    min-h-[calc(100svh-90px)] max-h-[800px]
+                    /* Tablet */
+                    md:min-h-[500px] md:max-h-[700px]
+                    /* Desktop */
+                    lg:h-[calc(100vh-90px)] lg:min-h-[550px] lg:max-h-none
+                ">
                     {/* Background - Pure Dark Gradient, No Imagery */}
                     <div className="absolute inset-0 z-0">
                         <div className="absolute inset-0 bg-gradient-to-r from-[#050910] via-[#0B1221] to-[#050910]" />
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#050910_100%)] opacity-50" />
                     </div>
 
-                    <div className="relative z-20 w-full max-w-[1400px] mx-auto px-6">
-                        <div className="max-w-4xl -mt-20">
-                            <h1 className="text-white text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.95] mb-6 uppercase">
+                    <div className="relative z-20 w-full max-w-[1400px] mx-auto px-6 py-12 sm:py-20 lg:py-0">
+                        <div className="max-w-4xl lg:-mt-20">
+                            <h1 className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.95] mb-6 uppercase text-balance">
                                 Sectors <br />
                                 Served
                             </h1>
-                            <p className="text-slate-300 text-lg md:text-xl font-light leading-relaxed max-w-2xl mb-8 border-l-2 border-[#3B82F6] pl-6">
+                            <p className="text-slate-300 text-base sm:text-lg md:text-xl font-light leading-relaxed max-w-2xl mb-8 border-l-2 border-[#3B82F6] pl-6 text-balance">
                                 Advisory support for high-risk environments facing aerial threats.
                             </p>
 
                             <ContactTrigger
                                 className="
-                                    group relative overflow-hidden
+                                    group relative overflow-hidden inline-block
                                     px-8 py-4 bg-white text-[#050910] 
                                     text-base font-bold tracking-wider uppercase
                                     transition-all duration-300
                                     hover:bg-red-600 hover:text-white
+                                    min-h-[44px] flex items-center justify-center
                                 "
                             >
                                 Discuss Your Sector
@@ -46,7 +55,7 @@ export default function SectorsPage() {
                 </section>
 
                 {/* S2: SECTOR GRID */}
-                <section className="py-24 bg-[#F8FAFC] border-b border-slate-200">
+                <section className="py-16 lg:py-24 bg-[#F8FAFC] border-b border-slate-200">
                     <div className="max-w-[1400px] mx-auto px-6">
                         <div className="max-w-[1120px] mx-auto mb-16 text-center">
                             <SectionLabel text="INDUSTRIES" />
@@ -226,7 +235,7 @@ export default function SectorsPage() {
                 </div>
 
                 {/* S4: CTA */}
-                <section className="py-24 bg-[#050910] text-center border-t border-white/5">
+                <section className="py-16 lg:py-24 bg-[#050910] text-center border-t border-white/5">
                     <div className="max-w-2xl mx-auto px-6">
                         <h2 className="text-white text-4xl font-bold mb-6 tracking-tight">
                             Sector Specific Intelligence
